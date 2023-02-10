@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class drive extends SubsystemBase {
@@ -26,22 +27,40 @@ public class drive extends SubsystemBase {
   private final MotorControllerGroup rightMo = new MotorControllerGroup(four, five, six);
   public final DifferentialDrive difDrive = new DifferentialDrive(leftMo, rightMo);
   
+  public boolean isBreak = false;
+
   /** Creates a new drive. */
   public drive() {
-    one.setIdleMode(IdleMode.kBrake);
-    two.setIdleMode(IdleMode.kBrake);
-    three.setIdleMode(IdleMode.kBrake);
-    four.setIdleMode(IdleMode.kBrake);
-    five.setIdleMode(IdleMode.kBrake);
-    six.setIdleMode(IdleMode.kBrake);
+    
   }
 
   public void makeMeDrive(double leftSpeed, double rightSpeed) {
     difDrive.tankDrive(leftSpeed, rightSpeed);
   }
 
+  public void brake() {
+    if (isBreak == true) {
+      one.setIdleMode(IdleMode.kBrake);
+      two.setIdleMode(IdleMode.kBrake);
+      three.setIdleMode(IdleMode.kBrake);
+      four.setIdleMode(IdleMode.kBrake);
+      five.setIdleMode(IdleMode.kBrake);
+      six.setIdleMode(IdleMode.kBrake);
+      isBreak = false;
+    } else {
+      one.setIdleMode(IdleMode.kCoast);
+      two.setIdleMode(IdleMode.kCoast);
+      three.setIdleMode(IdleMode.kCoast);
+      four.setIdleMode(IdleMode.kCoast);
+      five.setIdleMode(IdleMode.kCoast);
+      six.setIdleMode(IdleMode.kCoast);
+      isBreak = true;
+    }
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putBoolean("isCoast", isBreak);
   }
 }

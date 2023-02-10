@@ -8,6 +8,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.shootme;
+import frc.robot.commands.suiiiiiiiii;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.drive;
 import frc.robot.subsystems.shoot;
@@ -57,6 +58,7 @@ public class RobotContainer {
         // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    m_driverController.x().onTrue(new suiiiiiiiii(m_drive));
     m_drive.setDefaultCommand(new driveplease(m_drive, m_driverController::getLeftY, m_driverController::getRightY));
   }
 
