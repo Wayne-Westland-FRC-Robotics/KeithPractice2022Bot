@@ -12,11 +12,16 @@ import frc.robot.commands.suiiiiiiiii;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.drive;
 import frc.robot.subsystems.shoot;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.PID;
+import frc.robot.commands.drivejoy;
 import frc.robot.commands.driveplease;
+import frc.robot.commands.drivex;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -34,9 +39,24 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  private final Joystick m_driverJoystickR = 
+      new Joystick(OperatorConstants.kDriverJoystickPortR);
+  private final Joystick m_driverJoystickL =
+      new Joystick(OperatorConstants.kDriverJoystickPortL);
+
+  private final Command m_joyDrive = new drivejoy(m_drive, m_driverJoystickR, m_driverJoystickL);
+  private final Command m_xboxDrive = new drivex(m_drive, m_driverController);
+
+  SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    
+    m_chooser.setDefaultOption("Joystick Drive", m_joyDrive);
+    m_chooser.addOption("Xbox Controller Drive", m_xboxDrive);
+
+    Shuffleboard.getTab("Control Mode").add(m_chooser);
+    
     // Configure the trigger bindings
     configureBindings();
   }
@@ -59,7 +79,7 @@ public class RobotContainer {
     // cancelling on release.
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
     m_driverController.x().onTrue(new suiiiiiiiii(m_drive));
-    m_drive.setDefaultCommand(new driveplease(m_drive, m_driverController::getLeftY, m_driverController::getRightY));
+    m_drive.setDefaultCommand(m_chooser.getSelected());
   }
 
   /**

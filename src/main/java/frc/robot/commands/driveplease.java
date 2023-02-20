@@ -31,7 +31,7 @@ public class driveplease extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drive.makeMeDrive(leftSpeed.getAsDouble(), rightSpeed.getAsDouble() * -1);
+    m_drive.makeMeDrive(leftSpeed.getAsDouble() * 0.8, rightSpeed.getAsDouble() * -0.8);
   }
 
   // Called once the command ends or is interrupted.
